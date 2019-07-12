@@ -7,4 +7,6 @@
     <string name="post_it">post it!</string>
     <string name="refresh_feed">refresh feed</string>
     <string name="success_try_refresh">SUCCESS, try refresh!</string>
+    <string name="main_label">主页面</string>
+    <string name="video_label">视频</string>
 </resources>

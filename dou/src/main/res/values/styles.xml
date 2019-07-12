@@ -8,4 +8,14 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="MainPageTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">#3D5AFE</item>
+        <item name="colorPrimaryDark">#3D5AFE</item>
+    </style>
+
+    <style name="VideoPageTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+        <item name="colorPrimary">@android:color/black</item>
+        <item name="colorPrimaryDark">@android:color/black</item>
+    </style>
+
 </resources>

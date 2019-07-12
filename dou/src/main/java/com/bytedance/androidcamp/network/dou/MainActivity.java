@@ -5,9 +5,11 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -16,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 import com.bumptech.glide.Glide;
 import com.bytedance.androidcamp.network.dou.api.IMiniDouyinService;
@@ -49,11 +52,8 @@ public class MainActivity extends AppCompatActivity {
     private Button mBtnRefresh;
 
     // TODO 8: initialize retrofit & miniDouyinService
-    private Retrofit retrofit = new Retrofit.Builder()
-                                .baseUrl(IMiniDouyinService.BASE_URL)
-                                .addConverterFactory(GsonConverterFactory.create())
-                                .build();
-    private IMiniDouyinService miniDouyinService = retrofit.create(IMiniDouyinService.class);
+    private Retrofit retrofit;
+    private IMiniDouyinService miniDouyinService;
 
     private IMiniDouyinService getMiniDouyinService()
     {
@@ -76,8 +76,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        initRecyclerView();
         initBtns();
+        fetchFeed(null);
     }
 
     private void initBtns() {
@@ -110,15 +110,20 @@ public class MainActivity extends AppCompatActivity {
 
     public static class MyViewHolder extends RecyclerView.ViewHolder {
         public ImageView img;
+        public TextView name;
+        public CardView card;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img);
+            name = itemView.findViewById(R.id.nameText);
+            card = itemView.findViewById(R.id.card);
         }
 
         public void bind(final Activity activity, final Video video) {
             Glide.with(activity).load(video.getImageUrl()).into(img);
-            img.setOnClickListener(new View.OnClickListener() {
+            name.setText(video.getUserName());
+            card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     VideoActivity.launch(activity, video.getVideoUrl());
