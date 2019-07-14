@@ -8,6 +8,7 @@ public class Video {
     @SerializedName("user_name") private String userName;
     @SerializedName("image_url") private String imageUrl;
     @SerializedName("video_url") private String videoUrl;
+    @SerializedName("updatedAt") private String updateDate;
 
     public String getStudentId() {
         return studentId;
@@ -40,4 +41,8 @@ public class Video {
     public void setVideoUrl(String videoUrl) {
         this.videoUrl = videoUrl;
     }
+
+    public String getUpdateDate() { return updateDate; }
+
+    public void setUpdateDate(String updateDate) { this.updateDate = updateDate; }
 }

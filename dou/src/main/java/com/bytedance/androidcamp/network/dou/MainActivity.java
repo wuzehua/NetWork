@@ -26,6 +26,9 @@ import com.bytedance.androidcamp.network.dou.model.GetResponse;
 import com.bytedance.androidcamp.network.dou.model.PostResponse;
 import com.bytedance.androidcamp.network.dou.model.Video;
 import com.bytedance.androidcamp.network.dou.util.ResourceUtils;
+import com.google.gson.internal.bind.ReflectiveTypeAdapterFactory;
+import com.stone.vega.library.VegaLayoutManager;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -50,6 +53,7 @@ public class MainActivity extends AppCompatActivity {
     private Uri mSelectedVideo;
     public Button mBtn;
     private Button mBtnRefresh;
+    private RecyclerView.Adapter<MyViewHolder> mAdapter;
 
     // TODO 8: initialize retrofit & miniDouyinService
     private Retrofit retrofit;
@@ -72,11 +76,13 @@ public class MainActivity extends AppCompatActivity {
         return miniDouyinService;
     }
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initBtns();
+        initRecyclerView();
         fetchFeed(null);
     }
 
@@ -112,17 +118,20 @@ public class MainActivity extends AppCompatActivity {
         public ImageView img;
         public TextView name;
         public CardView card;
+        public TextView date;
 
         public MyViewHolder(@NonNull View itemView) {
             super(itemView);
             img = itemView.findViewById(R.id.img);
             name = itemView.findViewById(R.id.nameText);
             card = itemView.findViewById(R.id.card);
+            date = itemView.findViewById(R.id.updateDateText);
         }
 
         public void bind(final Activity activity, final Video video) {
             Glide.with(activity).load(video.getImageUrl()).into(img);
             name.setText(video.getUserName());
+            date.setText(video.getUpdateDate());
             card.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -134,8 +143,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecyclerView() {
         mRv = findViewById(R.id.rv);
-        mRv.setLayoutManager(new LinearLayoutManager(this));
-        mRv.setAdapter(new RecyclerView.Adapter<MyViewHolder>() {
+        mRv.setLayoutManager(new VegaLayoutManager());
+        mAdapter = new RecyclerView.Adapter<MyViewHolder>() {
             @NonNull
             @Override
             public MyViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
@@ -154,7 +163,9 @@ public class MainActivity extends AppCompatActivity {
             public int getItemCount() {
                 return mVideos.size();
             }
-        });
+        };
+        mRv.setAdapter(mAdapter);
+
     }
 
     public void chooseImage() {
@@ -245,7 +256,9 @@ public class MainActivity extends AppCompatActivity {
                     mBtnRefresh.setEnabled(true);
                     mBtnRefresh.setText(R.string.refresh_feed);
                     mVideos = response.body().getVideos();
-                    initRecyclerView();
+                    //initRecyclerView();
+                    mAdapter.notifyDataSetChanged();
+                    mRv.scrollToPosition(0);
                 }
             }
 
